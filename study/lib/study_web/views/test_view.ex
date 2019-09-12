@@ -6,8 +6,7 @@ defmodule StudyWeb.TestView do
    """
    use StudyWeb, :view
 
-   def render("test.html", assigns) do
-      "#{IO.inspect(assigns)}"
-
-   end
+#    def render("test.html", assigns) do
+#       "#{IO.inspect(assigns)}"
+#    end
 end

@@ -1,3 +1,5 @@
+//TODO:如何添加新的css/js/sass/pic etc
+
 const path = require('path');
 const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
