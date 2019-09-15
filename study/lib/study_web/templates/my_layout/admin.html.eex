@@ -1,0 +1,5 @@
+ <div>
+ <h> My layout view page</h>
+ <%= render @view_module, @view_template, assigns %> 
+ </div>
+ 
