@@ -14,13 +14,13 @@ defmodule StudyWeb.PageController do
   
     #IO.inspect(get_format(conn)) #的值时“html”
     conn
-    |>put_format(:json)
-    |> put_layout({StudyWeb.MyLayoutView, :admin})
+    #|>put_format(:json)
+    |> put_layout(false)
     #如果不指定，就用系统默认的layoutView module
     #|>put_layout("admin.html")
     #因为当前默认的view是StudyWeb.PageView,所以put_new_view不生效，只有当前Controller没有view时，才生效
     #|>put_new_view(StudyWeb.TestView)
     |>put_view(StudyWeb.TestView)
-    |>render("index.html", name: "jack")
+    |>render("sui.html", heart: 11, huxi: 4)
   end
 end
