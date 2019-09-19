@@ -29,7 +29,6 @@ defmodule StudyWeb do
 
   def view do
     quote do
-
       use Phoenix.View,
         root: "lib/study_web/templates",
         namespace: StudyWeb

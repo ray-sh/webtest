@@ -1,3 +1,3 @@
 defmodule StudyWeb.MyLayoutView do
-    use StudyWeb, :view
+  use StudyWeb, :view
 end

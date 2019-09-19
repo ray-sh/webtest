@@ -1,4 +1,4 @@
 defmodule StudyWeb.LayoutView do
-  #? who is calling layout view
+  # ? who is calling layout view
   use StudyWeb, :view
 end
