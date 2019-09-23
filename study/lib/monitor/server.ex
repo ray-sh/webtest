@@ -10,14 +10,29 @@ defmodule DataHub do
 
     Logger.info("开始监听端口#{port}")
     dump(listen_socket)
-    Task.start(__MODULE__, :loop_acceptor, [listen_socket])
+    #Task.start(__MODULE__, :loop_acceptor, [listen_socket])
+    Task.start(__MODULE__, :active_listen, [listen_socket])
+
+  end
+
+  def active_listen(listen_socket) do
+    {:ok, accept_socket} = :gen_tcp.accept(listen_socket)
+    Task.start(__MODULE__, :active_serve, [accept_socket])
+    active_listen(listen_socket)
+  end
+
+  def active_serve(accept_socket) do
+    #ative 模式，创建process的进程来处理，保存client发来的消息
+    {:ok, handler} = MsgHandler.start_link()
+    Port.connect(accept_socket,handler)
+    :inet.setopts(accept_socket, [active: true])
   end
 
   def loop_acceptor(listen_socket) do
     # acceptor要做为一个server，这样才能处理不同的client连接
     {:ok, accept_socket} = :gen_tcp.accept(listen_socket)
     # client是个#Port类型的数据
-    # Ports provide a mechanism to start operating system processes external to the Erlang VM and 
+    # Ports provide a mechanism to start operating system processes external to the Erlang VM and
     # communicate with them via message passing
     Logger.info("One client connected")
     dump(accept_socket)
