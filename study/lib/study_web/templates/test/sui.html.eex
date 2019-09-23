@@ -14,12 +14,12 @@
 <body>
 <div class="sui-layout">
   <div class="sidebar">
-  <ul class="sui-nav nav-list">
-  <li class="nav-header">救护车</li>
-  <li class="active"><a>001</a></li>
-  <li><a>002</a></li>
-  <li><a>003</a></li>
-</ul>
+    <ul class="sui-nav nav-list" id="cars">
+      <li class="nav-header">救护车</li>
+      <li class="active"><a>001</a></li>
+      <li><a>002</a></li>
+      <li><a>003</a></li>
+    </ul>
   </div>
   <div class="content">
     <li>心跳: <%=@heart %></li>

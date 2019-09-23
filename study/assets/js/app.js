@@ -15,3 +15,20 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+
+function refresh(content) {
+    //refresh side bar
+    $("#cars").empty()
+     
+    $("#cars").append(refresh_cars(content.cars))
+}
+
+function refresh_cars(cars) {
+    var i;
+    var result = "";
+    for( i = 0; i<cars.length; i++)
+    {
+        result = result + "<li><a>" + cars[i] + "</a></li>"
+    }
+    return result
+}
