@@ -14,12 +14,12 @@ import "phoenix_html"
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
-// import socket from "./socket"
+import socket from "./socket"
 
 function refresh(content) {
     //refresh side bar
     $("#cars").empty()
-     
+
     $("#cars").append(refresh_cars(content.cars))
 }
 

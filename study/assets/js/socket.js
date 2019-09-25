@@ -55,9 +55,26 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("cars:*", {})
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
+let cars_nav = $("#cars")
+
+channel.on("refresh", payload => {
+  console.log("Get refresh message")
+  $("#cars").empty()
+  $("#cars").append(refresh_cars(payload.cars))
+})
+
+function refresh_cars(cars) {
+  var i;
+  var result = "";
+  for( i = 0; i<cars.length; i++)
+  {
+      result = result + "<li><a>" + cars[i] + "</a></li>"
+  }
+  return result
+}
 export default socket

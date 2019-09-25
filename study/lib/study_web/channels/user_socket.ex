@@ -2,7 +2,7 @@ defmodule StudyWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", StudyWeb.RoomChannel
+  channel "cars:*", StudyWeb.CarsChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
