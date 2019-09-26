@@ -23,7 +23,7 @@ defmodule DataHub do
 
   def active_serve(accept_socket) do
     #ative 模式，创建process的进程来处理，保存client发来的消息
-    {:ok, handler} = MsgHandler.start_link()
+    {:ok, handler} = DynamicSupervisor.start_child(Monitor.DynamicSupervisor, MsgHandler)
     Port.connect(accept_socket,handler)
     :inet.setopts(accept_socket, [active: true])
   end

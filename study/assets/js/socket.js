@@ -70,7 +70,7 @@ channel.on("refresh", payload => {
 
 function refresh_cars(cars) {
   var i;
-  var result = "";
+  var result = "<li class=\"nav-header\">救护车</li>";
   for( i = 0; i<cars.length; i++)
   {
       result = result + "<li><a>" + cars[i] + "</a></li>"

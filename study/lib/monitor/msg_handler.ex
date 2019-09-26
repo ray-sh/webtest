@@ -1,6 +1,9 @@
 defmodule MsgHandler do
-   use GenServer
-   def start_link() do
+   #we don't want to restart the GenServer for now.
+   #TODO: How to handle the client connection not stable issue, we need test the case that cars send message first
+   # then disconnect, after a while reconnect. We hou
+   use GenServer, restart: :temporary
+   def start_link(_) do
       GenServer.start_link(__MODULE__, [])
    end
 
