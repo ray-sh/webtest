@@ -14,6 +14,7 @@ defmodule Study.Application do
       {DynamicSupervisor, strategy: :one_for_one, name: Monitor.DynamicSupervisor},
       #
       # Starts a worker by calling: Study.Worker.start_link(arg)
+      {DataHub, Application.fetch_env!(:study, :port)}
       # {Study.Worker, arg},
     ]
 

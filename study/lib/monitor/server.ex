@@ -1,5 +1,32 @@
 defmodule DataHub do
   require Logger
+  use GenServer
+
+  def start_link(port) do
+    GenServer.start_link(__MODULE__, port)
+  end
+
+  @impl true
+  def init(port) do
+    {:ok, listen_socket} = :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+    Logger.info("开始监听端口#{port}")
+    dump(listen_socket)
+    Process.send_after(self(), :accept, 1000)
+    {:ok, listen_socket}
+  end
+
+  @impl true
+  def handle_info(:accept,listen_socket) do
+    active_listen(listen_socket)
+    Process.send_after(self(), :accept, 1000)
+    {:noreply, listen_socket}
+  end
+
+  @impl true
+  def handle_info(_msg,listen_socket) do
+    Logger.info("unknow msg")
+    {:noreply, listen_socket}
+  end
 
   def start_server(port) do
     # 配置server的端口，参数，listen函数会真正占用这个端口，并且开始监听
@@ -16,9 +43,12 @@ defmodule DataHub do
   end
 
   def active_listen(listen_socket) do
+    #TODO:要限制一下连接个数，否则会有安全隐患
+    Logger.info("wating for connectiong")
     {:ok, accept_socket} = :gen_tcp.accept(listen_socket)
+    Logger.info("accept new connectiong")
     Task.start(__MODULE__, :active_serve, [accept_socket])
-    active_listen(listen_socket)
+    #active_listen(listen_socket)
   end
 
   def active_serve(accept_socket) do
