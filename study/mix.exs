@@ -39,7 +39,7 @@ defmodule Study.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:elixir_mllp, git: "https://github.com/ray-sh/elixir-mllp.git", tag: "v0.2.9"}
+      {:elixir_mllp, git: "https://github.com/ray-sh/elixir-mllp.git"}
     ]
   end
 end

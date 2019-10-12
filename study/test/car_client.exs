@@ -26,9 +26,9 @@ defmodule CarClient do
      
      MSH|^~\&|MINDRAY_D-SERIES^00A037009A0053DE^EUI-64||||20190929161511000||ORU^R01^ORU_R01|3940|P|2.6|||AL|NE||UNICODE UTF-8|||IHE_PCD_001^IHE PCD^1.3.6.1.4.1.19376.1.6.1.1.1^ISO
      PID|||^^^Hospital^PI||^^^^^^L"
-    #  {:ok, socket} = :gen_tcp.connect('localhost', 5000, [:binary])
-    #  :gen_tcp.send(socket, msg1)
-    #  :gen_tcp.send(socket, msg2)
-    #  :gen_tcp.send(socket, msg3)
+     {:ok, socket} = :gen_tcp.connect('localhost', 5001, [:binary])
+     :gen_tcp.send(socket, msg1)
+     :gen_tcp.send(socket, msg2)
+     :gen_tcp.send(socket, msg3)
     end
   end
