@@ -5,7 +5,7 @@ defmodule HL7Sim do
     @product_server {{35,185,137,46}, 5000}
 
     def start_server(port \\@default_port) do
-        MLLP.Receiver.start(port, MLLP.DefaultDispatcher, false)
+        MLLP.Receiver.start(port, HL7MessageBox, false)
     end
 
     def connect_local(), do: connect(@default_server)
