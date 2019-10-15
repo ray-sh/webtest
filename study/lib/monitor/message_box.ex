@@ -48,43 +48,59 @@ defmodule HL7MessageBox do
     {:ok, :application_reject}
   end
 
-  def alloc_ets(name) do
-
+  def ets_name() do
+    :ets.new(:device_table, [:named_table])
+    |> case do
+      :undefined ->
+        :ets.new(:device_table, [:named_table])
+      name ->
+        name
+    end
+    
   end
 
-  def handle([],deviceInfo), do: deviceInfo
-  def handle([head | tail], deviceInfo) do
+  def handle([],device_info) do
+    #One message has been handled
+    ets_name = ets_name()
+    case :ets.lookup(device_info.id) do
+      [] ->
+        :ets.insert(ets_name, {device_info.id, device_info})
+      pre_device_info ->
+        if pre_device_info.time_stamp == device_info.time_stamp do
+          :ets.insert(ets_name, {device_info.id, DeviceInfo.merge(pre_device_info, device_info)})
+        else
+          Logger.info("Send the previous device info")
+          #TODO: implement String.chars for device struct
+        end
+    end
+    device_info
+  end
 
-    div = handle_message(head, deviceInfo)
-
+  def handle([head | tail], device_info) do
+    div = handle_message(head, device_info)
     handle(tail, div)
   end
 
-  def handle_message(<<"MSH|", head::binary>>, deviceInfo) do
-    id =
-    String.split(head,"|")
-    |> Enum.at(1)
-    %{deviceInfo | id: id}
+  def handle_message(<<"MSH|", head::binary>>, device_info) do
+    heads = String.split(head,"|")
+    %{device_info | id: Enum.at(heads,1), time_stamp: Enum.at(heads,5)}
   end
 
-  def handle_message(<<"PID|", _head::binary>>, deviceInfo) do
-    deviceInfo
+  def handle_message(<<"PID|", _head::binary>>, device_info) do
+    device_info
   end
 
-  def handle_message(<<"PV1|", _head::binary>>, deviceInfo) do
-    deviceInfo
+  def handle_message(<<"PV1|", _head::binary>>, device_info) do
+    device_info
   end
 
-  def handle_message(<<"OBR|", head::binary>>, deviceInfo) do
-    time_stamp =
-    String.split(head,"|")
-    |> Enum.at(-1)
-    %{deviceInfo | time_stamp: time_stamp}
+  def handle_message(<<"OBR|", head::binary>>, device_info) do
+    device_info
   end
 
-  def handle_message(<<"OBX|1|", _head::binary>>, deviceInfo), do: deviceInfo
-  def handle_message(<<"OBX|2|", _head::binary>>, deviceInfo), do: deviceInfo
-  def handle_message(<<"OBX|3|", _head::binary>>, deviceInfo), do: deviceInfo
-  def handle_message(<<"OBX|4|", _head::binary>>, deviceInfo), do: deviceInfo
+  def handle_message(<<"OBX|1|", _head::binary>>, device_info), do: device_info
+  def handle_message(<<"OBX|2|", _head::binary>>, device_info), do: device_info
+  def handle_message(<<"OBX|3|", _head::binary>>, device_info), do: device_info
+  def handle_message(<<"OBX|4|", _head::binary>>, device_info), do: device_info
 
 end
