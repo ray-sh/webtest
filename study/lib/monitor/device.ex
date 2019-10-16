@@ -1,10 +1,11 @@
 defmodule DeviceInfo do
+    @derive [Jason.Encoder]
     defstruct [
         :id,
         :time_stamp,
-        :heart_beat, #MDC_ECG_HEART_RATE
-        :breath,     #MDC_TTHOR_RESP_RATE
-        :ecg_wave,      #MDC_ECG_ELEC_POTL_II
+        :heart_beat,      #MDC_ECG_HEART_RATE
+        :breath,          #MDC_TTHOR_RESP_RATE
+        :ecg_wave,        #MDC_ECG_ELEC_POTL_II
         :tthor_wave       #MDC_IMPED_TTHOR, Transthoracic Impedance(经胸阻抗)
     ]
 

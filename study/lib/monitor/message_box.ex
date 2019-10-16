@@ -56,21 +56,22 @@ defmodule HL7MessageBox do
       name ->
         name
     end
-    
+
   end
 
   def handle([],device_info) do
     #One message has been handled
     ets_name = ets_name()
-    case :ets.lookup(device_info.id) do
+    case :ets.lookup(ets_name, device_info.id) do
       [] ->
         :ets.insert(ets_name, {device_info.id, device_info})
       pre_device_info ->
         if pre_device_info.time_stamp == device_info.time_stamp do
           :ets.insert(ets_name, {device_info.id, DeviceInfo.merge(pre_device_info, device_info)})
         else
-          Logger.info("Send the previous device info")
+          Logger.info("Send the previous device info #{IO.inspect(pre_device_info)}")
           #TODO: implement String.chars for device struct
+          StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{cars: pre_device_info})
         end
     end
     device_info
