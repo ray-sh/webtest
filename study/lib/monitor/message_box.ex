@@ -32,9 +32,6 @@ defmodule HL7MessageBox do
     |>String.trim()
     |>String.split("\r")
     |>handle(%DeviceInfo{})
-    |>IO.inspect()
-
-
 
     {:ok, :application_accept}
   end
@@ -49,12 +46,13 @@ defmodule HL7MessageBox do
   end
 
   def ets_name() do
-    :ets.new(:device_table, [:named_table])
+    :ets.whereis(:device_table)
     |> case do
       :undefined ->
         :ets.new(:device_table, [:named_table])
-      name ->
-        name
+        :device_table
+      _ ->
+        :device_table
     end
 
   end
@@ -62,16 +60,19 @@ defmodule HL7MessageBox do
   def handle([],device_info) do
     #One message has been handled
     ets_name = ets_name()
-    case :ets.lookup(ets_name, device_info.id) do
+    Logger.debug("Query device info by ID #{device_info.id}")
+    :ets.lookup(ets_name, device_info.id)
+    |>
+    case do
       [] ->
         :ets.insert(ets_name, {device_info.id, device_info})
-      pre_device_info ->
+      [{id, pre_device_info}] ->
         if pre_device_info.time_stamp == device_info.time_stamp do
-          :ets.insert(ets_name, {device_info.id, DeviceInfo.merge(pre_device_info, device_info)})
+          :ets.insert(ets_name, {id, DeviceInfo.merge(pre_device_info, device_info)})
         else
-          Logger.info("Send the previous device info #{IO.inspect(pre_device_info)}")
-          #TODO: implement String.chars for device struct
+          Logger.debug("Send the previous device info #{IO.inspect(pre_device_info)}")
           StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{cars: pre_device_info})
+          :ets.insert(ets_name, {id, device_info})
         end
     end
     device_info
@@ -95,7 +96,7 @@ defmodule HL7MessageBox do
     device_info
   end
 
-  def handle_message(<<"OBR|", head::binary>>, device_info) do
+  def handle_message(<<"OBR|", _head::binary>>, device_info) do
     device_info
   end
 
