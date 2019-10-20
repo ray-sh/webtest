@@ -1,5 +1,5 @@
 defmodule Monitor.DynamicSupervisor do
-   use DynamicSupervisor
+  use DynamicSupervisor
 
   def start_link(init_arg) do
     DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
@@ -11,10 +11,10 @@ defmodule Monitor.DynamicSupervisor do
   end
 
   def all_cars_status() do
-   __MODULE__
-   |> DynamicSupervisor.which_children()
-   |> Enum.map( fn {_,pid,_,_} ->
-      GenServer.call(pid,:pop)
-   end)
+    __MODULE__
+    |> DynamicSupervisor.which_children()
+    |> Enum.map(fn {_, pid, _, _} ->
+      GenServer.call(pid, :pop)
+    end)
   end
 end

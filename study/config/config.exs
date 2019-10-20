@@ -8,7 +8,7 @@
 use Mix.Config
 
 # Configures the endpoint
-#config app_name, name_space(这个时可选的参数)，kvs
+# config app_name, name_space(这个时可选的参数)，kvs
 '''
 Application.get_all_env(:study)
 [
@@ -40,6 +40,7 @@ Application.get_all_env(:study)
   {:port, 5000}
 ]
 '''
+
 config :study, StudyWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "1KF+FzqICM+avHpZSZbCGvAtAOEnvDbh99+M6hg+cd/Pt4tIhY4qVEyUq2/g0gvL",
@@ -48,15 +49,16 @@ config :study, StudyWeb.Endpoint,
 
 # Configures Elixir's Logger
 config :logger, :console,
+  level: :info,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-#Configures for the data receiver
-#config application，kvs
-config :study, 
+# Configures for the data receiver
+# config application，kvs
+config :study,
   port: 5000
 
 config :elixir_mllp, dispatcher_module: HL7MessageBox

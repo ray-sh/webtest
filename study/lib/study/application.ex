@@ -6,17 +6,17 @@ defmodule Study.Application do
   use Application
 
   def start(_type, _args) do
-    #start HL7 Server
+    # start HL7 Server
     MLLP.Receiver.start(Application.fetch_env!(:study, :port), HL7MessageBox, false)
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      StudyWeb.Endpoint,
+      StudyWeb.Endpoint
       # Start cars info collectiong worker
-      #{DynamicSupervisor, strategy: :one_for_one, name: Monitor.DynamicSupervisor},
+      # {DynamicSupervisor, strategy: :one_for_one, name: Monitor.DynamicSupervisor},
       #
       # Starts a worker by calling: Study.Worker.start_link(arg)
-      #{DataHub, Application.fetch_env!(:study, :port)}
+      # {DataHub, Application.fetch_env!(:study, :port)}
       # {Study.Worker, arg},
     ]
 

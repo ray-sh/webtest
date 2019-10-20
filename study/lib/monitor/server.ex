@@ -8,7 +8,9 @@ defmodule DataHub do
 
   @impl true
   def init(port) do
-    {:ok, listen_socket} = :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+    {:ok, listen_socket} =
+      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+
     Logger.info("开始监听端口#{port}")
     dump(listen_socket)
     Process.send_after(self(), :accept, 1000)
@@ -16,14 +18,14 @@ defmodule DataHub do
   end
 
   @impl true
-  def handle_info(:accept,listen_socket) do
+  def handle_info(:accept, listen_socket) do
     active_listen(listen_socket)
     Process.send_after(self(), :accept, 1000)
     {:noreply, listen_socket}
   end
 
   @impl true
-  def handle_info(_msg,listen_socket) do
+  def handle_info(_msg, listen_socket) do
     Logger.info("unknow msg")
     {:noreply, listen_socket}
   end
@@ -37,25 +39,24 @@ defmodule DataHub do
 
     Logger.info("开始监听端口#{port}")
     dump(listen_socket)
-    #Task.start(__MODULE__, :loop_acceptor, [listen_socket])
+    # Task.start(__MODULE__, :loop_acceptor, [listen_socket])
     Task.start(__MODULE__, :active_listen, [listen_socket])
-
   end
 
   def active_listen(listen_socket) do
-    #TODO:要限制一下连接个数，否则会有安全隐患
+    # TODO:要限制一下连接个数，否则会有安全隐患
     Logger.info("wating for connectiong")
     {:ok, accept_socket} = :gen_tcp.accept(listen_socket)
     Logger.info("accept new connectiong")
     Task.start(__MODULE__, :active_serve, [accept_socket])
-    #active_listen(listen_socket)
+    # active_listen(listen_socket)
   end
 
   def active_serve(accept_socket) do
-    #ative 模式，创建process的进程来处理，保存client发来的消息
+    # ative 模式，创建process的进程来处理，保存client发来的消息
     {:ok, handler} = DynamicSupervisor.start_child(Monitor.DynamicSupervisor, MsgHandler)
-    Port.connect(accept_socket,handler)
-    :inet.setopts(accept_socket, [active: true])
+    Port.connect(accept_socket, handler)
+    :inet.setopts(accept_socket, active: true)
   end
 
   def loop_acceptor(listen_socket) do
@@ -97,8 +98,7 @@ defmodule DataHub do
 
     case :gen_tcp.recv(socket, 0) do
       {:ok, <<0x0B, data::binary>>} ->
-        data =
-        trim_last_two_bytes(data)
+        data = trim_last_two_bytes(data)
         Logger.info("Receive data #{String.trim(data)}")
 
       {:ok, data} ->
@@ -114,9 +114,10 @@ defmodule DataHub do
 
   def trim_last_two_bytes(binary) do
     bits = bit_size(binary)
+
     binary
-    |>IO.inspect()
-    |> binary_part(0,div(bits - 16, 8))
+    |> IO.inspect()
+    |> binary_part(0, div(bits - 16, 8))
   end
 
   defp dump(socket) do
