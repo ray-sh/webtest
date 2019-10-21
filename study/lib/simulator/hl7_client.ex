@@ -6,10 +6,19 @@ defmodule HL7Client do
   """
   require Logger
   @default_server "127.0.0.1"
-
   @product_server "35.185.137.46"
 
   use GenServer
+
+  def switch(stop \\ true) when is_boolean(stop) do
+    case stop do
+      true ->
+        GenServer.cast(__MODULE__, :stop_send)
+
+      _ ->
+        GenServer.cast(__MODULE__, :stop_send)
+    end
+  end
 
   def start_link(server_ip \\ @default_server, port \\ 5000, send_interval \\ 5) do
     GenServer.start_link(__MODULE__, [server_ip, port, send_interval], name: __MODULE__)

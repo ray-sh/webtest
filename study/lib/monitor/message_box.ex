@@ -109,9 +109,9 @@ defmodule HL7MessageBox do
       String.contains?(data, "MDC_TTHOR_RESP_RATE") ->
         info = String.split(data, "|")
         %{device_info | breath: Enum.at(info, 4)}
+
       true ->
         device_info
     end
-
   end
 end
