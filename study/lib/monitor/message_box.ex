@@ -73,7 +73,9 @@ defmodule HL7MessageBox do
           :ets.insert(ets_name, {id, new_message})
         else
           Logger.debug("Send the previous device info #{inspect(pre_device_info)}")
-          StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{cars: pre_device_info})
+          #TODO：这种发送数据的方式会导致信息的发送不同步，要把完备数据缓存起来，定时发送，同时还要考虑client端如何
+          #渲染，这也对数据的发送方式有影响
+          StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{car: pre_device_info})
           :ets.insert(ets_name, {id, device_info})
         end
     end

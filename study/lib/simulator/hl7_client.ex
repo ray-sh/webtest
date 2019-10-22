@@ -25,7 +25,7 @@ defmodule HL7Client do
       "dev-#{Enum.random(1000..9999)}"
       |> String.to_atom()
 
-    Logger.info("Start client #{id}")
+    Logger.debug("start client #{id}")
     GenServer.start_link(__MODULE__, [server_ip, port, send_interval, id], name: id)
   end
 

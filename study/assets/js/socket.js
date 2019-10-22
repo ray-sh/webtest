@@ -65,16 +65,16 @@ let cars_nav = $("#cars")
 channel.on("refresh", payload => {
   console.log("Get refresh message", payload)
   $("#cars").empty()
-  $("#cars").append(refresh_cars(payload.cars))
+  $("#cars").append(refresh_cars(payload.car))
 })
 
-function refresh_cars(cars) {
+function refresh_cars(car) {
   var i;
   var result = "<li class=\"nav-header\">救护车</li>";
-  for( i = 0; i<cars.length; i++)
-  {
-      result = result + "<li><a>" + cars[i] + "</a></li>"
-  }
-  return result
+  // for( i = 0; i<cars.length; i++)
+  // {
+  //     result = result + "<li><a>" + cars[i].id + "</a></li>"
+  // }
+  return result  + "<li><a>" + car.id + "</a></li>"
 }
 export default socket
