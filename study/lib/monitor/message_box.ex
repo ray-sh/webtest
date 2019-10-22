@@ -42,10 +42,11 @@ defmodule HL7MessageBox do
   end
 
   def ets_name() do
+    # ets table必须要public，因为这里我们用name来创建全局唯一的etstable
     :ets.whereis(:device_table)
     |> case do
       :undefined ->
-        :ets.new(:device_table, [:named_table])
+        :ets.new(:device_table, [:named_table, :public])
         :device_table
 
       _ ->
@@ -55,6 +56,8 @@ defmodule HL7MessageBox do
 
   def handle([], device_info) do
     # One message has been handled
+    # ranch 会给每个client分配一个单独的process来处理 dispatch的message
+    Logger.debug("Handle HL7 message within process #{inspect(self())}")
     ets_name = ets_name()
     Logger.debug("Query device info by ID #{device_info.id}")
 
@@ -69,7 +72,7 @@ defmodule HL7MessageBox do
           Logger.debug("update the message #{inspect(new_message)}")
           :ets.insert(ets_name, {id, new_message})
         else
-          Logger.info("Send the previous device info #{inspect(pre_device_info)}")
+          Logger.debug("Send the previous device info #{inspect(pre_device_info)}")
           StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{cars: pre_device_info})
           :ets.insert(ets_name, {id, device_info})
         end
