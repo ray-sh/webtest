@@ -11,13 +11,15 @@ defmodule Study.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      StudyWeb.Endpoint
+      StudyWeb.Endpoint,
       # Start cars info collectiong worker
       # {DynamicSupervisor, strategy: :one_for_one, name: Monitor.DynamicSupervisor},
       #
       # Starts a worker by calling: Study.Worker.start_link(arg)
       # {DataHub, Application.fetch_env!(:study, :port)}
       # {Study.Worker, arg},
+      #Message queque worker
+      {HL7MessageQue, nil}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -58,7 +58,7 @@ defmodule HL7MessageBox do
     # One message has been handled
     # ranch 会给每个client分配一个单独的process来处理 dispatch的message
     Logger.debug("Handle HL7 message within process #{inspect(self())}")
-    ets_name = ets_name()
+    ets_name = :device_table
     Logger.debug("Query device info by ID #{device_info.id}")
 
     :ets.lookup(ets_name, device_info.id)
@@ -75,8 +75,9 @@ defmodule HL7MessageBox do
           Logger.debug("Send the previous device info #{inspect(pre_device_info)}")
           #TODO：这种发送数据的方式会导致信息的发送不同步，要把完备数据缓存起来，定时发送，同时还要考虑client端如何
           #渲染，这也对数据的发送方式有影响
-          StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{car: pre_device_info})
+          #StudyWeb.Endpoint.broadcast_from(self(), "cars:*", "refresh", %{car: pre_device_info})
           :ets.insert(ets_name, {id, device_info})
+          :ets.insert(:device_table_ready, {id, pre_device_info})
         end
     end
 
