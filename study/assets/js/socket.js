@@ -62,7 +62,7 @@ channel.join()
 
 let cars_nav = $("#cars")
 
-channel.on("refresh", payload => {
+channel.on("cars", payload => {
   console.log("Get refresh message", payload)
   $("#cars").empty()
   $("#cars").append(refresh_cars(payload.cars))

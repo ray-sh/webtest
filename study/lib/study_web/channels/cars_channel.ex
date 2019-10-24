@@ -1,17 +1,16 @@
 defmodule StudyWeb.CarsChannel do
   use StudyWeb, :channel
   def join("cars:*", _payload, socket) do
-    Process.send_after(self(), "refresh", 5000)
+    :timer.send_after(1000, "refresh")
     {:ok, socket}
   end
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   def handle_info("refresh", socket) do
-    #IO.puts "get refresh message"
     cars = HL7MessageQue.ready_messages()
-    if length(cars) > 0, do: broadcast!(socket, "refresh", %{cars: cars})
-    Process.send_after(self(), "refresh", 5000)
+    if length(cars) > 0, do: push(socket,"cars", %{cars: cars})
+    :timer.send_after(5000, "refresh")
     {:noreply, socket}
   end
 
