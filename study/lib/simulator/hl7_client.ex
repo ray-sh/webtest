@@ -20,12 +20,16 @@ defmodule HL7Client do
     end
   end
 
+  def stop_sender(id) do
+    GenServer.stop(id)
+  end
+
   def start_link(server_ip \\ @default_server, port \\ 5000, send_interval \\ 5) do
     id =
-      "dev-#{Enum.random(1000..9999)}"
+      "dev_#{Enum.random(1000..9999)}"
       |> String.to_atom()
 
-    Logger.debug("start client #{id}")
+    Logger.info("start client #{id}")
     GenServer.start_link(__MODULE__, [server_ip, port, send_interval, id], name: id)
   end
 
@@ -48,7 +52,7 @@ defmodule HL7Client do
   @impl true
   def handle_info(:send_message, state) do
     if elem(state, 2) do
-      Logger.debug("start to send message to HL7 server")
+      Logger.info("#{elem(state, 3)} send message to HL7 server")
       MLLP.Sender.async_send_message(elem(state, 0), SimMessage.msg_d_series(elem(state, 3)))
     end
 
