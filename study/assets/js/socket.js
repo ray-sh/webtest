@@ -64,17 +64,55 @@ let cars_nav = $("#cars")
 
 channel.on("cars", payload => {
   console.log("Get refresh message", payload)
-  $("#cars").empty()
-  $("#cars").append(refresh_cars(payload.cars))
+  refresh_cars(payload.cars)
 })
-
+/*
+$(function(){
+  $("#cars li").click(function() {
+      $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
+      $(this).addClass('active');                            // 添加当前元素的样式
+  });
+});
+*/
 function refresh_cars(cars) {
-  var i;
-  var result = "<li class=\"nav-header\">救护车</li>";
-  for( i = 0; i<cars.length; i++)
+  if ($("#cars li").length == 0)
   {
-      result = result + "<li><a>" + cars[i].id + "</a></li>"
+    var i;
+    var result = "<li class=\"nav-header\">救护车</li>";
+    for( i = 0; i<cars.length; i++)
+    {
+        result = result + "<li> <a>" + cars[i].id + "</a></li>"
+    }
+    console.log(result)
+    $('#cars').append(result)
+
+  }else
+  {
+    var i;
+    for( i = 0; i<cars.length; i++)
+    {
+      if(!contains(cars[i].id))
+      {
+        $('#cars').append("<li> <a>" + cars[i].id + "</a></li>");
+      }
+    }  
   }
-  return result
+  $(function(){
+    $("#cars li").click(function() {
+        $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
+        $(this).addClass('active');                            // 添加当前元素的样式
+    });
+  });
+}
+function contains(car) {
+  var cars = $("#cars a");
+  var i;
+  for( i = 0; i<cars.length; i++){
+    if (cars[i].innerHTML == car)
+    {
+      return true
+    }
+  }
+  return false
 }
 export default socket
