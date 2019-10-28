@@ -1,5 +1,6 @@
 defmodule StudyWeb.CarsChannel do
   use StudyWeb, :channel
+
   def join("cars:*", _payload, socket) do
     :timer.send_after(1000, "refresh")
     {:ok, socket}
@@ -9,8 +10,8 @@ defmodule StudyWeb.CarsChannel do
   # by sending replies to requests from the client
   def handle_info("refresh", socket) do
     cars = HL7MessageQue.ready_messages()
-    if length(cars) > 0, do: push(socket,"cars", %{cars: cars})
-    :timer.send_after(5000, "refresh")
+    if length(cars) > 0, do: push(socket, "cars", %{cars: cars})
+    :timer.send_after(Application.fetch_env!(:study, :interval), "refresh")
     {:noreply, socket}
   end
 

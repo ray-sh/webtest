@@ -59,7 +59,9 @@ config :phoenix, :json_library, Jason
 # Configures for the data receiver
 # config application，kvs
 config :study,
-  port: 5000
+  port: 5000,
+  # This is for HL7 client message sending interval
+  interval: 1000
 
 config :elixir_mllp, dispatcher_module: HL7MessageBox
 

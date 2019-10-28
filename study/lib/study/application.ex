@@ -18,7 +18,7 @@ defmodule Study.Application do
       # Starts a worker by calling: Study.Worker.start_link(arg)
       # {DataHub, Application.fetch_env!(:study, :port)}
       # {Study.Worker, arg},
-      #Message queque worker
+      # Message queque worker
       {HL7MessageQue, nil}
     ]
 
