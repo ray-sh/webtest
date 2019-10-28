@@ -52,7 +52,7 @@ defmodule HL7Client do
   @impl true
   def handle_info(:send_message, state) do
     if elem(state, 2) do
-      Logger.info("#{elem(state, 3)} send message to HL7 server")
+      Logger.debug("#{elem(state, 3)} send message to HL7 server")
       MLLP.Sender.async_send_message(elem(state, 0), SimMessage.msg_d_series(elem(state, 3)))
     end
 

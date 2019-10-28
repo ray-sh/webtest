@@ -65,15 +65,23 @@ let cars_nav = $("#cars")
 channel.on("cars", payload => {
   console.log("Get refresh message", payload)
   refresh_cars(payload.cars)
+  refresh_matrix(payload.cars)
 })
-/*
-$(function(){
-  $("#cars li").click(function() {
-      $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
-      $(this).addClass('active');                            // 添加当前元素的样式
-  });
-});
-*/
+
+function refresh_matrix(cars){
+  var car_id = $(".active a")[0].text
+  var i;
+  for(i=0; i< cars.length; i++){
+    if (cars[i].id == car_id)
+    {
+      console.log("update matrix for car " + car_id)
+      $("#breath")[0].innerText = "呼吸:" + cars[i].breath
+      $("#heart")[0].innerText = "心跳:" + cars[i].heart_beat
+      break
+    }
+  }
+}
+
 function refresh_cars(cars) {
   if ($("#cars li").length == 0)
   {
@@ -81,7 +89,14 @@ function refresh_cars(cars) {
     var result = "<li class=\"nav-header\">救护车</li>";
     for( i = 0; i<cars.length; i++)
     {
-        result = result + "<li> <a>" + cars[i].id + "</a></li>"
+        if(i == 0)
+        {
+          result = result + "<li class=\"active\"> <a>" + cars[i].id + "</a></li>"
+        }else
+        {
+          result = result + "<li> <a>" + cars[i].id + "</a></li>"
+        }
+
     }
     console.log(result)
     $('#cars').append(result)
@@ -95,12 +110,12 @@ function refresh_cars(cars) {
       {
         $('#cars').append("<li> <a>" + cars[i].id + "</a></li>");
       }
-    }  
+    }
   }
   $(function(){
     $("#cars li").click(function() {
         $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
-        $(this).addClass('active');                            // 添加当前元素的样式
+        $(this).addClass('active');                    // 添加当前元素的样式
     });
   });
 }

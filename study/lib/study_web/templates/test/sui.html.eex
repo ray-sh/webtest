@@ -17,9 +17,9 @@
     <ul class="sui-nav nav-list" id="cars">
     </ul>
   </div>
-  <div class="content">
-    <li>心跳: <%=@heart %></li>
-    <li>呼吸：<%=@huxi %> </li>
+  <div class="content" id="matrix">
+    <li id="heart">心跳: </li>
+    <li id="breath">呼吸：</li>
   </div>
 </div>
 
